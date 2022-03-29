@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { send } from 'process';
 
 const app = express();
 const port = 4000;

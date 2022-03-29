@@ -12,7 +12,8 @@
   },
   "scripts": {
     "dev": "nodemon --inspect src/index.ts",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "dev2": "concurrently \"tsc -w\" \"nodemon --inspect dist/index.js\""
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
