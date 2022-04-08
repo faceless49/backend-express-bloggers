@@ -1,67 +1,35 @@
 import {Request, Response, Router} from 'express';
-import {PostType} from '../types';
-import {bloggers} from './bloggers-router';
+import {postsRepository} from '../repositories/posts-repository';
 
-export const productsRouter = Router()
-let posts: PostType[] = [
-  {
-    id: 1,
-    title: 'hello',
-    shortDescription: 'world hello',
-    content: 'lorem',
-    bloggerId: 1,
-    bloggerName: 'Dimych',
-  },
-  {
-    id: 2,
-    title: 'hello',
-    shortDescription: 'world hello',
-    content: 'lorem',
-    bloggerId: 2,
-    bloggerName: 'Max',
-  },
-];
-
+export const postsRouter = Router()
 
 
 // * Get all posts
 
 
-productsRouter.get('/', (req: Request, res: Response) => {
+postsRouter.get('/', (req: Request, res: Response) => {
+  const posts = postsRepository.findPosts();
   res.send(posts)
 });
 
 // * Add new post
 
-productsRouter.post('/', (req: Request, res: Response) => {
-  const blogger = bloggers.find(({id}) => id === +req.body.bloggerId)
+postsRouter.post('/', (req: Request, res: Response) => {
+  const {title, shortDescription, content, bloggerId} = req.body;
 
-
-  if (!req.body.shortDescription || req.body.shortDescription.length > 100
-    || !req.body.content || !req.body.title) {
-    res.send(400)
-  } else if (!blogger) {
-    res.send(400)
+  const newPost = postsRepository.createPost(title, shortDescription, content, bloggerId);
+  if (newPost) {
+    res.status(201).send(newPost)
   } else {
-    const newPost: PostType = {
-      id: +new Date(),
-      title: req.body.title,
-      shortDescription: req.body.shortDescription,
-      content: req.body.content,
-      bloggerId: blogger.id,
-      bloggerName: blogger.name,
-    };
-    posts.push(newPost);
-    res.send(newPost)
+    res.send(400)
   }
 });
 
 // * Get one post by id
 
-productsRouter.get('/:postId', (req: Request, res: Response) => {
+postsRouter.get('/:postId', (req: Request, res: Response) => {
   const id = Number(req.params.postId);
-  const post = posts.find((p) => p.id === id);
-
+  const post = postsRepository.findPostById(id)
   if (post) {
     res.send(post);
   } else {
@@ -71,31 +39,21 @@ productsRouter.get('/:postId', (req: Request, res: Response) => {
 
 // * Update existing post by id
 
-productsRouter.put('/:postId', (req: Request, res: Response) => {
+postsRouter.put('/:postId', (req: Request, res: Response) => {
   const id = Number(req.params.postId);
-  const post = posts.find((p) => p.id === id);
-  if (!req.body.shortDescription || req.body.shortDescription.length > 100
-    || !req.body.content || !req.body.title) {
-    res.send(400);
-  } else if (!post) {
-    res.send(404)
-  } else {
-    post.title = req.body.title;
-    post.shortDescription = req.body.shortDescription;
-    post.content = req.body.content;
-    res.send(200);
-  }
+  const {title, shortDescription, content} = req.body;
+  const status = postsRepository.updatePostById(id, title, shortDescription, content);
+  res.send(status)
 });
+
 
 // * Delete post by id
 
-productsRouter.delete('/:postId', (req: Request, res: Response) => {
-  const id = Number(req.params.postId);
-  const newPosts = posts.filter((p) => p.id !== id);
-  if (newPosts.length < posts.length) {
-    posts = newPosts;
-    res.send(200);
+postsRouter.delete('/:postId', (req: Request, res: Response) => {
+  const isDeleted = postsRepository.deletePostById(+req.params.postId);
+  if (isDeleted) {
+    res.send(204)
   } else {
-    res.send(404);
+    res.send(404)
   }
 });

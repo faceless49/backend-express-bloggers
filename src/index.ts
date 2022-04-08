@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import {BloggerType, PostType} from './types';
+import {postsRouter} from './routes/posts-router';
 import {bloggersRouter} from './routes/bloggers-router';
 
 const app = express();
@@ -12,7 +12,7 @@ const jsonBodyMiddleware = bodyParser.json();
 app.use(jsonBodyMiddleware);
 
 app.use('/bloggers', bloggersRouter)
-app.use('/posts', bloggersRouter)
+app.use('/posts', postsRouter)
 
 
 
