@@ -1,42 +1,48 @@
-import express, { Request, Response } from 'express';
+import express, {Request, Response} from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import {BloggerType, PostType} from './types';
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 app.use(cors());
 const jsonBodyMiddleware = bodyParser.json();
 app.use(jsonBodyMiddleware);
 
-let bloggers = [
+let bloggers: BloggerType[] = [
   {
-    id: 0,
+    id: 1,
     name: 'Dimych',
-    youtubeUrl: 'https://www.youtube.com/c/ITKAMASUTRA',
-    posts: [
-      {
-        id: 0,
-        title: 'Redux',
-        shortDescription: 'React',
-        content: 'It-kamastura',
-        bloggerId: 0,
-        blog: 'about IT',
-      },
-    ],
+    youtubeUrl: 'https://www.youtube.com/c/',
+  },
+  {
+    id: 2,
+    name: 'Max',
+    youtubeUrl: 'https://www.youtube.com/c/',
   },
 ];
 
-let posts = [
+let posts: PostType[] = [
   {
     id: 1,
     title: 'hello',
     shortDescription: 'world hello',
     content: 'lorem',
-    bloggerId: 0,
-    blog: null,
+    bloggerId: 1,
+    bloggerName: 'Dimych',
+  },
+  {
+    id: 2,
+    title: 'hello',
+    shortDescription: 'world hello',
+    content: 'lorem',
+    bloggerId: 2,
+    bloggerName: 'Max',
   },
 ];
+
+const urlValid = new RegExp(/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('HW bloggers');
@@ -48,16 +54,22 @@ app.get('/bloggers', (req: Request, res: Response) => {
   res.send(bloggers);
 });
 
-// * Add new blogger
+// ^ Add new blogger
+
 app.post('/bloggers', (req: Request, res: Response) => {
-  const newBlogger = {
-    id: +new Date(),
-    name: req.body.name,
-    youtubeUrl: req.body.youtubeUrl,
-    posts: [],
-  };
-  bloggers.push(newBlogger);
-  res.send(200);
+
+  if (req.body.name.trim().length >= 2 && req.body.name.length < 15 && req.body.youtubeUrl.length <= 100 && urlValid.test(req.body.youtubeUrl)) {
+    const newBlogger = {
+      id: +new Date(),
+      name: req.body.name,
+      youtubeUrl: req.body.youtubeUrl,
+      posts: [],
+    };
+    bloggers.push(newBlogger);
+    res.send(201);
+  } else {
+    res.send(400)
+  }
 });
 
 // * Get one blogger by id
@@ -77,12 +89,15 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 app.put('/bloggers/:bloggerId', (req: Request, res: Response) => {
   const id = Number(req.params.bloggerId);
   const blogger = bloggers.find((b) => b.id === id);
-  if (blogger) {
+
+  if (!blogger) {
+    res.send(404)
+  } else if (req.body.youtubeUrl.length > 100 || req.body.name.trim().length < 2 || req.body.name.length > 15 || !urlValid.test(req.body.youtubeUrl)) {
+    res.send(400)
+  } else {
     blogger.name = req.body.name;
     blogger.youtubeUrl = req.body.youtubeUrl;
-    res.send(200);
-  } else {
-    res.send(404);
+    res.send(204);
   }
 });
 
@@ -102,22 +117,32 @@ app.delete('/bloggers/:bloggerId', (req: Request, res: Response) => {
 // * Get all posts
 
 app.get('/posts/', (req: Request, res: Response) => {
-  res.send(posts);
+  res.send(posts)
 });
 
 // * Add new post
 
 app.post('/posts', (req: Request, res: Response) => {
-  const newPost = {
-    id: +new Date(),
-    title: req.body.title,
-    shortDescription: req.body.shortDescription,
-    content: req.body.content,
-    bloggerId: +new Date(),
-    blog: null,
-  };
-  posts.push(newPost);
-  res.send(200);
+  const blogger = bloggers.find(({id}) => id === +req.body.bloggerId)
+
+
+  if (!req.body.shortDescription || req.body.shortDescription.length > 100
+    || !req.body.content || !req.body.title) {
+    res.send(400)
+  } else if (!blogger) {
+    res.send(400)
+  } else {
+    const newPost: PostType = {
+      id: +new Date(),
+      title: req.body.title,
+      shortDescription: req.body.shortDescription,
+      content: req.body.content,
+      bloggerId: blogger.id,
+      bloggerName: blogger.name,
+    };
+    posts.push(newPost);
+    res.send(newPost)
+  }
 });
 
 // * Get one post by id
@@ -125,6 +150,7 @@ app.post('/posts', (req: Request, res: Response) => {
 app.get('/posts/:postId', (req: Request, res: Response) => {
   const id = Number(req.params.postId);
   const post = posts.find((p) => p.id === id);
+
   if (post) {
     res.send(post);
   } else {
@@ -137,13 +163,16 @@ app.get('/posts/:postId', (req: Request, res: Response) => {
 app.put('/posts/:postId', (req: Request, res: Response) => {
   const id = Number(req.params.postId);
   const post = posts.find((p) => p.id === id);
-  if (post) {
+  if (!req.body.shortDescription || req.body.shortDescription.length > 100
+    || !req.body.content || !req.body.title) {
+    res.send(400);
+  } else if (!post) {
+    res.send(404)
+  } else {
     post.title = req.body.title;
     post.shortDescription = req.body.shortDescription;
     post.content = req.body.content;
     res.send(200);
-  } else {
-    res.send(404);
   }
 });
 
