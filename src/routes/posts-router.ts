@@ -1,5 +1,7 @@
 import {Request, Response, Router} from 'express';
 import {postsRepository} from '../repositories/posts-repository';
+import {inputValidationMiddleware} from '../middlewares/input-validation-middleware';
+import {body} from 'express-validator';
 
 export const postsRouter = Router()
 
@@ -13,8 +15,16 @@ postsRouter.get('/', (req: Request, res: Response) => {
 });
 
 // * Add new post
+const titleValidation = body('title').trim().isLength({min: 1,max: 30})
+const descriptionValidation = body('shortDescription').trim().isLength({min: 1,max: 100})
+const contentValidation = body('content').trim().isLength({min: 1, max: 1000})
 
-postsRouter.post('/', (req: Request, res: Response) => {
+postsRouter.post('/',
+  titleValidation,
+  descriptionValidation,
+  contentValidation,
+  inputValidationMiddleware,
+  (req: Request, res: Response) => {
   const {title, shortDescription, content, bloggerId} = req.body;
 
   const newPost = postsRepository.createPost(title, shortDescription, content, bloggerId);
@@ -39,7 +49,12 @@ postsRouter.get('/:postId', (req: Request, res: Response) => {
 
 // * Update existing post by id
 
-postsRouter.put('/:postId', (req: Request, res: Response) => {
+postsRouter.put('/:postId',
+  titleValidation,
+  descriptionValidation,
+  contentValidation,
+  inputValidationMiddleware,
+  (req: Request, res: Response) => {
   const id = Number(req.params.postId);
   const {title, shortDescription, content} = req.body;
   const status = postsRepository.updatePostById(id, title, shortDescription, content);

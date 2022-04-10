@@ -1,8 +1,12 @@
 import {Request, Response, Router} from 'express';
 import {bloggersRepository} from '../repositories/bloggers-repository';
+import {body, validationResult} from 'express-validator';
+import {inputValidationMiddleware} from '../middlewares/input-validation-middleware';
+import {urlValidationMiddleware} from '../middlewares/url-validation-middleware';
 
 export const bloggersRouter = Router()
 
+const urlValid = new RegExp(/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
 
 // * Get all bloggers
 
@@ -11,11 +15,19 @@ bloggersRouter.get('/', (req: Request, res: Response) => {
   res.send(bloggers);
 });
 
+
+const titleValidation = body('name').trim().isLength({min: 2, max: 15}).withMessage('Value length should be 3 to 15');
+const urlValidation = body('youtubeUrl').trim().isLength({max: 100}).matches(urlValid)
+
 // ^ Add new blogger
 
-bloggersRouter.post('/', (req: Request, res: Response) => {
+bloggersRouter.post('/',
+  titleValidation,
+  inputValidationMiddleware,
+  urlValidation,
+  urlValidationMiddleware,
+  (req: Request, res: Response) => {
   const {name, youtubeUrl} = req.body;
-
 
   const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl)
   if (newBlogger) {
@@ -41,7 +53,12 @@ bloggersRouter.get('/:bloggerId', (req: Request, res: Response) => {
 
 // * Update existing blogger by id
 
-bloggersRouter.put('/:bloggerId', (req: Request, res: Response) => {
+bloggersRouter.put('/:bloggerId',
+  titleValidation,
+  inputValidationMiddleware,
+  urlValidation,
+  urlValidationMiddleware,
+  (req: Request, res: Response) => {
   const id = Number(req.params.bloggerId);
   const {name, youtubeUrl} = req.body
   const statusCode = bloggersRepository.updateBloggerById(id, name, youtubeUrl)

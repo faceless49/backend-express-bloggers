@@ -28,13 +28,7 @@ export const postsRepository = {
   createPost(title: string, shortDescription: string, content: string, bloggerId: number) {
     const bloggers = bloggersRepository.getAllBloggers();
     const blogger = bloggers.find(({id}) => id === bloggerId)
-
-    if (!shortDescription || shortDescription.length > 100
-      || !content || !title) {
-      return null
-    } else if (!blogger) {
-      return null
-    } else {
+    if (blogger) {
       const newPost: PostType = {
         id: +new Date(),
         title,
@@ -49,24 +43,17 @@ export const postsRepository = {
   },
 
   findPostById(postId: number) {
-    const post = posts.find((p) => p.id === postId);
-    return post
+    return posts.find((p) => p.id === postId)
   },
 
   updatePostById(id: number, title: string, shortDescription: string, content: string) {
     const post = posts.find((p) => p.id === id);
-
-    if (!shortDescription || shortDescription.length > 100
-      || !content || !title) {
-      return 400;
-    } else if (!post) {
-      return 404
-    } else {
+    if (post) {
       post.title = title;
       post.shortDescription = shortDescription;
       post.content = content;
       return 200
-    }
+     }
   },
   deletePostById(id: number) {
     for (let i = 0; i < posts.length; i++) {

@@ -14,7 +14,7 @@ const bloggers: BloggerType[] = [
 ];
 
 
-const urlValid = new RegExp(/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
+
 
 
 export const bloggersRepository = {
@@ -23,7 +23,6 @@ export const bloggersRepository = {
   },
 
   createBlogger(name: string, youtubeUrl: string) {
-    if (name.trim().length >= 2 && name.length < 15 && youtubeUrl.length <= 100 && urlValid.test(youtubeUrl)) {
       const newBlogger = {
         id: +new Date(),
         name,
@@ -32,9 +31,6 @@ export const bloggersRepository = {
       }
       bloggers.push(newBlogger)
       return newBlogger
-    } else {
-      return false
-    }
   },
 
   findBloggerById(id: number) {
@@ -46,9 +42,7 @@ export const bloggersRepository = {
     const blogger = bloggers.find((b) => b.id === id);
     if (!blogger) {
       return 404
-    } else if (youtubeUrl.length > 100 || name.trim().length < 2 || name.length > 15 || !urlValid.test(youtubeUrl)) {
-      return (400)
-    } else {
+    }  else {
       blogger.name = name;
       blogger.youtubeUrl = youtubeUrl;
       return 204
