@@ -17,7 +17,7 @@ bloggersRouter.get('/', (req: Request, res: Response) => {
 
 
 const titleValidation = body('name').trim().isLength({min: 2, max: 15}).withMessage('Value length should be 3 to 15');
-const urlValidation = body('youtubeUrl').trim().isLength({max: 100}).matches(urlValid)
+const urlValidation = body('youtubeUrl').trim().isLength({max: 100}).withMessage('Length url should be less 100').matches(urlValid).withMessage('Bad url youtube')
 
 // ^ Add new blogger
 
