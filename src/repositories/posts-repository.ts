@@ -49,7 +49,7 @@ export const postsRepository = {
   updatePostById(id: number, title: string, shortDescription: string, content: string) {
     const post = posts.find((p) => p.id === id);
     const blogger: BloggerType | undefined = bloggersRepository.getAllBloggers().find(({id}) => post?.bloggerId === id)
-    if (post) {
+    if (post && blogger) {
       post.title = title;
       post.shortDescription = shortDescription;
       post.content = content;
