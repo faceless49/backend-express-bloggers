@@ -46,7 +46,7 @@ bloggersRouter.get('/:bloggerId', (req: Request, res: Response) => {
   if (blogger) {
     res.send(blogger)
   } else {
-    res.send(400)
+    res.send(404)
   }
 });
 
