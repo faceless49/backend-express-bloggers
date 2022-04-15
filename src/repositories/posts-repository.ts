@@ -50,7 +50,7 @@ export const postsRepository = {
     const post = posts.find((p) => p.id === id);
     const blogger: BloggerType | undefined = bloggersRepository.getAllBloggers().find(({id}) => post?.bloggerId === id)
     if(!post) {
-      return 404
+      return 400
     }
     if (!blogger) {
       return 400
