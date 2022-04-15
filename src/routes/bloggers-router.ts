@@ -10,8 +10,8 @@ const urlValid = new RegExp(/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)
 
 // * Get all bloggers
 
-bloggersRouter.get('/', (req: Request, res: Response) => {
-  const bloggers = bloggersRepository.getAllBloggers();
+bloggersRouter.get('/', async (req: Request, res: Response) => {
+  const bloggers = await bloggersRepository.getAllBloggers();
   res.send(bloggers);
 });
 
@@ -26,10 +26,10 @@ bloggersRouter.post('/',
   inputValidationMiddleware,
   urlValidation,
   urlValidationMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
   const {name, youtubeUrl} = req.body;
 
-  const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl)
+  const newBlogger = await bloggersRepository.createBlogger(name, youtubeUrl)
   if (newBlogger) {
     res.status(201).send(newBlogger)
     return newBlogger
@@ -41,8 +41,8 @@ bloggersRouter.post('/',
 
 // * Get one blogger by id
 
-bloggersRouter.get('/:bloggerId', (req: Request, res: Response) => {
-  const blogger = bloggersRepository.findBloggerById(Number(req.params.bloggerId));
+bloggersRouter.get('/:bloggerId', async(req: Request, res: Response) => {
+  const blogger = await bloggersRepository.findBloggerById(Number(req.params.bloggerId));
   if (blogger) {
     res.send(blogger)
   } else {
@@ -58,18 +58,18 @@ bloggersRouter.put('/:bloggerId',
   inputValidationMiddleware,
   urlValidation,
   urlValidationMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
   const id = Number(req.params.bloggerId);
   const {name, youtubeUrl} = req.body
-  const statusCode = bloggersRepository.updateBloggerById(id, name, youtubeUrl)
+  const statusCode = await bloggersRepository.updateBloggerById(id, name, youtubeUrl)
   res.send(statusCode)
 });
 
 // * Delete blogger by id
 
-bloggersRouter.delete('/:bloggerId', (req: Request, res: Response) => {
+bloggersRouter.delete('/:bloggerId', async (req: Request, res: Response) => {
   const id = Number(req.params.bloggerId);
-  const isDeleted = bloggersRepository.deleteBloggerById(id);
+  const isDeleted = await bloggersRepository.deleteBloggerById(id);
   if (isDeleted) {
     res.send(204)
   } else {

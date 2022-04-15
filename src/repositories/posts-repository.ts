@@ -22,10 +22,10 @@ const posts: PostType[] = [
 
 
 export const postsRepository = {
-  findPosts() {
+  async findPosts(): Promise<PostType[]> {
     return posts
   },
-  createPost(title: string, shortDescription: string, content: string, bloggerId: number) {
+  async createPost(title: string, shortDescription: string, content: string, bloggerId: number): Promise<PostType | undefined> {
     const bloggers = bloggersRepository.getAllBloggers();
     const blogger = bloggers.find(({id}) => id === bloggerId)
     if (blogger) {
@@ -42,11 +42,11 @@ export const postsRepository = {
     }
   },
 
-  findPostById(postId: number) {
+  async findPostById(postId: number): Promise<PostType | undefined> {
     return posts.find((p) => p.id === postId)
   },
 
-  updatePostById(id: number, title: string, shortDescription: string, content: string, bloggerId: number) {
+  async updatePostById(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<number> {
     const post = posts.find((p) => p.id === id);
     const blogger: BloggerType | undefined = bloggersRepository.getAllBloggers().find(({id}) => post?.bloggerId === id)
     if(!post) {
@@ -62,7 +62,7 @@ export const postsRepository = {
       return 204
     }
   },
-  deletePostById(id: number) {
+  async deletePostById(id: number): Promise<boolean> {
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].id === id) {
         posts.splice(i, 1)

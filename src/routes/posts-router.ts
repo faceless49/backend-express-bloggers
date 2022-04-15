@@ -9,8 +9,8 @@ export const postsRouter = Router()
 // * Get all posts
 
 
-postsRouter.get('/', (req: Request, res: Response) => {
-  const posts = postsRepository.findPosts();
+postsRouter.get('/', async (req: Request, res: Response) => {
+  const posts = await postsRepository.findPosts();
   res.send(posts)
 });
 
@@ -24,10 +24,10 @@ postsRouter.post('/',
   descriptionValidation,
   contentValidation,
   inputValidationMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
   const {title, shortDescription, content, bloggerId} = req.body;
 
-  const newPost = postsRepository.createPost(title, shortDescription, content, bloggerId);
+  const newPost = await postsRepository.createPost(title, shortDescription, content, bloggerId);
   if (newPost) {
     res.status(201).send(newPost)
   } else {
@@ -37,9 +37,9 @@ postsRouter.post('/',
 
 // * Get one post by id
 
-postsRouter.get('/:postId', (req: Request, res: Response) => {
+postsRouter.get('/:postId', async (req: Request, res: Response) => {
   const id = Number(req.params.postId);
-  const post = postsRepository.findPostById(id)
+  const post = await postsRepository.findPostById(id)
   if (post) {
     res.send(post);
   } else {
@@ -54,18 +54,18 @@ postsRouter.put('/:postId',
   descriptionValidation,
   contentValidation,
   inputValidationMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
   const id = Number(req.params.postId);
   const {title, shortDescription, content, bloggerId} = req.body;
-  const status = postsRepository.updatePostById(id, title, shortDescription, content, bloggerId);
+  const status = await postsRepository.updatePostById(id, title, shortDescription, content, bloggerId);
   res.send(status)
 });
 
 
 // * Delete post by id
 
-postsRouter.delete('/:postId', (req: Request, res: Response) => {
-  const isDeleted = postsRepository.deletePostById(+req.params.postId);
+postsRouter.delete('/:postId', async (req: Request, res: Response) => {
+  const isDeleted = await postsRepository.deletePostById(+req.params.postId);
   if (isDeleted) {
     res.send(204)
   } else {
