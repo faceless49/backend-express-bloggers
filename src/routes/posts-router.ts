@@ -56,8 +56,8 @@ postsRouter.put('/:postId',
   inputValidationMiddleware,
   (req: Request, res: Response) => {
   const id = Number(req.params.postId);
-  const {title, shortDescription, content} = req.body;
-  const status = postsRepository.updatePostById(id, title, shortDescription, content);
+  const {title, shortDescription, content, bloggerId} = req.body;
+  const status = postsRepository.updatePostById(id, title, shortDescription, content, bloggerId);
   res.send(status)
 });
 
