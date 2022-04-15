@@ -19,7 +19,7 @@ const bloggers: BloggerType[] = [
 
 export const bloggersRepository = {
   async getAllBloggers():Promise<BloggerType[]> {
-    return bloggers
+    return bloggers;
   },
 
   async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType> {

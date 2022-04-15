@@ -26,7 +26,7 @@ export const postsRepository = {
     return posts
   },
   async createPost(title: string, shortDescription: string, content: string, bloggerId: number): Promise<PostType | undefined> {
-    const bloggers = bloggersRepository.getAllBloggers();
+    const bloggers = await bloggersRepository.getAllBloggers();
     const blogger = bloggers.find(({id}) => id === bloggerId)
     if (blogger) {
       const newPost: PostType = {
@@ -48,7 +48,7 @@ export const postsRepository = {
 
   async updatePostById(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<number> {
     const post = posts.find((p) => p.id === id);
-    const blogger: BloggerType | undefined = bloggersRepository.getAllBloggers().find(({id}) => post?.bloggerId === id)
+    const blogger: BloggerType | undefined = (await bloggersRepository.getAllBloggers()).find(({id}) => post?.bloggerId === id)
     if(!post) {
       return 400
     }
