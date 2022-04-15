@@ -42,9 +42,9 @@ bloggersRouter.post('/',
 // * Get one blogger by id
 
 bloggersRouter.get('/:bloggerId', (req: Request, res: Response) => {
-  const isExist = bloggersRepository.findBloggerById(Number(req.params.bloggerId));
-  if (isExist) {
-    res.send(200)
+  const blogger = bloggersRepository.findBloggerById(Number(req.params.bloggerId));
+  if (blogger) {
+    res.send(blogger)
   } else {
     res.send(400)
   }

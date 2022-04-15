@@ -34,8 +34,7 @@ export const bloggersRepository = {
   },
 
   findBloggerById(id: number) {
-    const blogger = bloggers.find((b) => b.id === id);
-    return !!blogger;
+    return bloggers.find((b) => b.id === id);
   },
 
   updateBloggerById(id: number, name: string, youtubeUrl: string) {
