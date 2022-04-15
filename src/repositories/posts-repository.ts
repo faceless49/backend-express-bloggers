@@ -49,16 +49,17 @@ export const postsRepository = {
   updatePostById(id: number, title: string, shortDescription: string, content: string, bloggerId: number) {
     const post = posts.find((p) => p.id === id);
     const blogger: BloggerType | undefined = bloggersRepository.getAllBloggers().find(({id}) => post?.bloggerId === id)
-    if (post && blogger) {
+    if(!post) {
+      return 404
+    }
+    if (!blogger) {
+      return 400
+    } else {
       post.title = title;
       post.shortDescription = shortDescription;
       post.content = content;
       post.bloggerId = bloggerId
       return 204
-    } else if (!blogger) {
-      return 400
-    } else {
-      return 404
     }
   },
   deletePostById(id: number) {
