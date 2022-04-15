@@ -31,7 +31,7 @@ bloggersRouter.post('/',
 
   const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl)
   if (newBlogger) {
-    res.send(201)
+    res.status(201).send(newBlogger)
     return newBlogger
   } else {
     res.send(400)

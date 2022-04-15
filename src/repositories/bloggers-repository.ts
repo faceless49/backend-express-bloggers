@@ -27,7 +27,7 @@ export const bloggersRepository = {
         id: +new Date(),
         name,
         youtubeUrl,
-        posts: []
+        // posts: []
       }
       bloggers.push(newBlogger)
       return newBlogger
