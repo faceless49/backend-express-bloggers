@@ -52,8 +52,10 @@ export const postsRepository = {
       post.title = title;
       post.shortDescription = shortDescription;
       post.content = content;
-      return 200
-     }
+      return 204
+     } else {
+      return 400
+    }
   },
   deletePostById(id: number) {
     for (let i = 0; i < posts.length; i++) {
