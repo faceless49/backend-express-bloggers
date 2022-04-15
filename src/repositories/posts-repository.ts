@@ -1,4 +1,4 @@
-import {PostType} from '../types';
+import {BloggerType, PostType} from '../types';
 import {bloggersRepository} from './bloggers-repository';
 
 const posts: PostType[] = [
@@ -48,19 +48,22 @@ export const postsRepository = {
 
   updatePostById(id: number, title: string, shortDescription: string, content: string) {
     const post = posts.find((p) => p.id === id);
+    const blogger: BloggerType | undefined = bloggersRepository.getAllBloggers().find(({id}) => post?.bloggerId === id)
     if (post) {
       post.title = title;
       post.shortDescription = shortDescription;
       post.content = content;
       return 204
-     } else {
+    } else if (!blogger) {
       return 400
+    } else {
+      return 404
     }
   },
   deletePostById(id: number) {
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].id === id) {
-        posts.splice(i,1)
+        posts.splice(i, 1)
         return true
       }
     }
