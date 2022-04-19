@@ -78,7 +78,7 @@ postsRouter.put(
     } else {
       res.status(204).send(updatedPost);
     }
-    const updatedBlogger = await bloggersService.getBloggerById(bloggerId);
+    const updatedBlogger = await bloggersService.findBloggerById(bloggerId);
     if (!updatedBlogger) {
       res.status(400);
     }
