@@ -1,26 +1,25 @@
-import express, {Request, Response} from 'express';
-import cors from 'cors';
 import bodyParser from 'body-parser';
-import {postsRouter} from './routes/posts-router';
-import {bloggersRouter} from './routes/bloggers-router';
+import cors from 'cors';
+import express from 'express';
+import { runDb } from './repositories/db';
+import { bloggersRouter } from './routes/bloggers-router';
+import { postsRouter } from './routes/posts-router';
 
 const app = express();
-const port = process.env.PORT || 4001;
+const port = process.env.PORT || 4000;
 
 app.use(cors());
 const jsonBodyMiddleware = bodyParser.json();
 app.use(jsonBodyMiddleware);
 
-app.use('/bloggers', bloggersRouter)
-app.use('/posts', postsRouter)
+app.use('/bloggers', bloggersRouter);
+app.use('/posts', postsRouter);
 
+const startApp = async () => {
+  await runDb();
+  app.listen(port, () => {
+    console.log(`Example app listening on port: ${port}`);
+  });
+};
 
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('HW bloggers');
-});
-
-
-app.listen(port, () => {
-  console.log(`Example app listening npon port ${port}`);
-});
+startApp();
