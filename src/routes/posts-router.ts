@@ -1,45 +1,54 @@
-import {Request, Response, Router} from 'express';
-import {postsRepository} from '../repositories/posts-repository';
-import {inputValidationMiddleware} from '../middlewares/input-validation-middleware';
-import {body} from 'express-validator';
+import { Request, Response, Router } from 'express';
+import { body } from 'express-validator';
+import { bloggersService } from '../domain/bloggers-service';
+import { postsService } from '../domain/posts-service';
+import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
 
-export const postsRouter = Router()
-
+export const postsRouter = Router();
 
 // * Get all posts
 
-
 postsRouter.get('/', async (req: Request, res: Response) => {
-  const posts = await postsRepository.findPosts();
-  res.send(posts)
+  const posts = await postsService.findPosts();
+  res.send(posts);
 });
 
 // * Add new post
-const titleValidation = body('title').trim().isLength({min: 1,max: 30})
-const descriptionValidation = body('shortDescription').trim().isLength({min: 1,max: 100})
-const contentValidation = body('content').trim().isLength({min: 1, max: 1000})
+const titleValidation = body('title').trim().isLength({ min: 1, max: 30 });
+const descriptionValidation = body('shortDescription')
+  .trim()
+  .isLength({ min: 1, max: 100 });
+const contentValidation = body('content').trim().isLength({ min: 1, max: 1000 });
 
-postsRouter.post('/',
+postsRouter.post(
+  '/',
   titleValidation,
   descriptionValidation,
   contentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-  const {title, shortDescription, content, bloggerId} = req.body;
+    const { title, shortDescription, content, bloggerId } = req.body;
 
-  const newPost = await postsRepository.createPost(title, shortDescription, content, bloggerId);
-  if (newPost) {
-    res.status(201).send(newPost)
-  } else {
-    res.send(400)
-  }
-});
+    const newPost = await postsService.createPost(
+      title,
+      shortDescription,
+      content,
+      bloggerId,
+    );
+
+    if (newPost) {
+      res.status(201).send(newPost);
+    } else {
+      res.send(400);
+    }
+  },
+);
 
 // * Get one post by id
 
 postsRouter.get('/:postId', async (req: Request, res: Response) => {
   const id = Number(req.params.postId);
-  const post = await postsRepository.findPostById(id)
+  const post = await postsService.findPostById(id);
   if (post) {
     res.send(post);
   } else {
@@ -49,26 +58,41 @@ postsRouter.get('/:postId', async (req: Request, res: Response) => {
 
 // * Update existing post by id
 
-postsRouter.put('/:postId',
+postsRouter.put(
+  '/:postId',
   titleValidation,
   descriptionValidation,
   contentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-  const id = Number(req.params.postId);
-  const {title, shortDescription, content, bloggerId} = req.body;
-  const status = await postsRepository.updatePostById(id, title, shortDescription, content, bloggerId);
-  res.send(status)
-});
-
+    const id = Number(req.params.postId);
+    const { title, shortDescription, content, bloggerId } = req.body;
+    const updatedPost = await postsService.updatePostById(
+      id,
+      title,
+      shortDescription,
+      content,
+    );
+    if (!updatedPost) {
+      res.send(404);
+    } else {
+      res.status(204).send(updatedPost);
+    }
+    const updatedBlogger = await bloggersService.getBloggerById(bloggerId);
+    if (!updatedBlogger) {
+      res.status(400);
+    }
+    return;
+  },
+);
 
 // * Delete post by id
 
 postsRouter.delete('/:postId', async (req: Request, res: Response) => {
-  const isDeleted = await postsRepository.deletePostById(+req.params.postId);
+  const isDeleted = await postsService.deletePostById(+req.params.postId);
   if (isDeleted) {
-    res.send(204)
+    res.send(204);
   } else {
-    res.send(404)
+    res.send(404);
   }
 });
