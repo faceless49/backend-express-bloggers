@@ -12,3 +12,15 @@ export type PostType = {
   bloggerId: number;
   bloggerName?: string;
 };
+
+export type UserType = {
+  id: string
+  login: string
+}
+export type CommentsType = {
+  id: string
+  content: string
+  userId: string
+  userLogin: string
+  addedAt: string
+}
