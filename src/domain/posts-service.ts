@@ -1,9 +1,10 @@
 import { postsRepository } from '../repositories/posts-db-repository';
 import { PostType } from '../types';
+import {RequestQueryType} from '../helpers';
 
 export const postsService = {
-  async findPosts() {
-    return postsRepository.findPosts();
+  async findPosts(reqParams: RequestQueryType, bloggerId: number | null) {
+    return postsRepository.findPosts(reqParams, bloggerId);
   },
   async findPostById(id: number): Promise<PostType | false> {
     const post = await postsRepository.findPostById(id);

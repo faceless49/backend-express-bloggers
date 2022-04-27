@@ -3,13 +3,15 @@ import { body } from 'express-validator';
 import { bloggersService } from '../domain/bloggers-service';
 import { postsService } from '../domain/posts-service';
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
+import {getPaginationData} from '../helpers';
 
 export const postsRouter = Router();
 
 // * Get all posts
 
 postsRouter.get('/', async (req: Request, res: Response) => {
-  const posts = await postsService.findPosts();
+  const reqParams = getPaginationData(req.query)
+  const posts = await postsService.findPosts(reqParams, null);
   res.send(posts);
 });
 
