@@ -10,7 +10,7 @@ export const usersRepository = {
 
     const totalCount = (await usersCollection.find().toArray()).length
     const pagesCount = Math.ceil(totalCount / pageSize)
-    const users = await usersCollection.find().skip((page - 1) * pageSize)
+    const users = await usersCollection.find().project({_id: false}).skip((page - 1) * pageSize)
       .limit(pageSize)
       .toArray()
 
