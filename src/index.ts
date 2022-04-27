@@ -4,6 +4,7 @@ import express from 'express';
 import { runDb } from './repositories/db';
 import { bloggersRouter } from './routes/bloggers-router';
 import { postsRouter } from './routes/posts-router';
+import 'dotenv/config';
 
 const app = express();
 const port = process.env.PORT || 4000;
