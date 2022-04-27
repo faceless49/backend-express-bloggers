@@ -3,6 +3,8 @@ import { body } from 'express-validator';
 import { bloggersService } from '../domain/bloggers-service';
 import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
 import { urlValidationMiddleware } from '../middlewares/url-validation-middleware';
+import {postsService} from '../domain/posts-service';
+import {getPaginationData} from '../helpers';
 
 export const bloggersRouter = Router();
 
@@ -11,8 +13,11 @@ const urlValid = new RegExp(/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)
 // * Get all bloggers
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
-  const bloggers = await bloggersService.findAllBloggers();
-  res.send(bloggers);
+  const reqParams = getPaginationData(req.query)
+  
+  res.status(200).send(
+    await bloggersService.findAllBloggers(reqParams)
+  )
 });
 
 const titleValidation = body('name')
@@ -26,7 +31,7 @@ const urlValidation = body('youtubeUrl')
   .matches(urlValid)
   .withMessage('Bad url youtube');
 
-// ^ Add new blogger
+// * Add new blogger
 
 bloggersRouter.post(
   '/',
@@ -84,4 +89,18 @@ bloggersRouter.delete('/:bloggerId', async (req: Request, res: Response) => {
   } else {
     res.send(404);
   }
+});
+
+
+// * Return all posts by blogger
+
+bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
+  const blogger = await bloggersService.findBloggerById(Number(req.params.bloggerId));
+  //
+  // console.log(req.query)
+  // console.log()
+  // if (blogger) {
+  //   const posts = await postsService.findPosts()
+  //
+  // }
 });

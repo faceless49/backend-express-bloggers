@@ -3,8 +3,8 @@ import { MongoClient } from 'mongodb';
 import 'dotenv/config';
 
 
-const mongoUri = process.env.MONGO_DB_URL;
-const client = new MongoClient(mongoUri!);
+const mongoUri = process.env.MONGO_DB_URL ?? "mongodb://0.0.0.0:27017/?maxPoolSize=20&w=majority";
+const client = new MongoClient(mongoUri);
 
 const db = client.db('blog');
 export const postsCollection = db.collection<PostType>('posts');
