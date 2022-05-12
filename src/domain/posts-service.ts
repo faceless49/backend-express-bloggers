@@ -24,7 +24,7 @@ export const postsService = {
       shortDescription,
       content,
       bloggerId,
-      bloggerName: '',
+      bloggerName: 'Test',
     };
     return await postsRepository.createPost(newPost);
   },
