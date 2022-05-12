@@ -50,10 +50,6 @@ export const bloggersRepository = {
   async deleteBloggerById(id: number): Promise<boolean> {
     const result = await bloggersCollection.deleteOne({id: +id});
 
-    if (result) {
-      return true;
-    } else {
-      return false;
-    }
+    return result.deletedCount === 1
   },
 };
