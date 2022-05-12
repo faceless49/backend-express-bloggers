@@ -1,12 +1,9 @@
 import {Request, Response, Router} from 'express';
-import {body} from 'express-validator';
 import {bloggersService} from '../domain/bloggers-service';
 import {
   bloggerValidationRules,
   inputValidationMiddleware,
-  urlValid
 } from '../middlewares/input-validation-middleware';
-import {urlValidationMiddleware} from '../middlewares/url-validation-middleware';
 import {postsService} from '../domain/posts-service';
 import {getPaginationData} from '../helpers';
 
@@ -23,16 +20,7 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
   )
 });
 
-const titleValidation = body('name')
-  .trim()
-  .isLength({min: 2, max: 15})
-  .withMessage('Value length should be 3 to 15');
-const urlValidation = body('youtubeUrl')
-  .trim()
-  .isLength({max: 100})
-  .withMessage('Length url should be less 100')
-  .matches(urlValid)
-  .withMessage('Bad url youtube');
+
 
 // * Add new blogger
 
@@ -66,11 +54,8 @@ bloggersRouter.get('/:bloggerId', bloggerValidationRules, async (req: Request, r
 
 bloggersRouter.put(
   '/:bloggerId',
-  titleValidation,
-  inputValidationMiddleware,
-  urlValidation,
-  urlValidationMiddleware,
   bloggerValidationRules,
+  inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const id = Number(req.params.bloggerId);
     const {name, youtubeUrl} = req.body;
@@ -125,5 +110,5 @@ bloggersRouter.post('/:bloggerId/posts', async (req: Request, res: Response) => 
     res.status(201).send(post)
   } else {
     res.send(200)
-  } //TODO Make Error return
+  }
 })

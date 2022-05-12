@@ -40,17 +40,18 @@ export const bloggersRepository = {
       {id: +id},
       {$set: {name, youtubeUrl}},
     );
-    await postsCollection.updateMany( {bloggerId: id},
-      {$set: {
-          "bloggerName": name
-        }}
+    await postsCollection.updateMany({bloggerId: id},
+      {
+        $set: {
+          'bloggerName': name
+        }
+      }
     )
     return result.modifiedCount === 1
   },
 
   async deleteBloggerById(id: number): Promise<boolean> {
     const result = await bloggersCollection.deleteOne({id: +id});
-
     return result.deletedCount === 1
   },
 };

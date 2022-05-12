@@ -2,7 +2,10 @@ import { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
 import { bloggersService } from '../domain/bloggers-service';
 import { postsService } from '../domain/posts-service';
-import { inputValidationMiddleware } from '../middlewares/input-validation-middleware';
+import {
+  inputValidationMiddleware,
+  postValidationRules
+} from '../middlewares/input-validation-middleware';
 import {getPaginationData} from '../helpers';
 
 export const postsRouter = Router();
@@ -16,17 +19,10 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 });
 
 // * Add new post
-const titleValidation = body('title').trim().isLength({ min: 1, max: 30 });
-const descriptionValidation = body('shortDescription')
-  .trim()
-  .isLength({ min: 1, max: 100 });
-const contentValidation = body('content').trim().isLength({ min: 1, max: 1000 });
 
 postsRouter.post(
   '/',
-  titleValidation,
-  descriptionValidation,
-  contentValidation,
+  postValidationRules,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const { title, shortDescription, content, bloggerId } = req.body;
@@ -70,9 +66,7 @@ postsRouter.get('/:postId', async (req: Request, res: Response) => {
 
 postsRouter.put(
   '/:postId',
-  titleValidation,
-  descriptionValidation,
-  contentValidation,
+  postValidationRules,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const id = Number(req.params.postId);
