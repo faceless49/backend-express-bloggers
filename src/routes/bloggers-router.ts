@@ -59,7 +59,14 @@ bloggersRouter.get('/:bloggerId', async (req: Request, res: Response) => {
   if (blogger) {
     res.send(blogger);
   } else {
-    res.send(404);
+    res.status(400);
+    res.send(res.send({
+      'errorsMessages': [{
+        message: 'blogger not found',
+        field: 'id'
+      }],
+      'resultCode': 1
+    }))
   }
 });
 
@@ -114,5 +121,6 @@ bloggersRouter.post('/:bloggerId/posts', async (req: Request, res: Response) => 
   if (post) {
     res.status(201).send(post)
   } else {
-    res.send(200)} //TODO Make Error return
+    res.send(200)
+  } //TODO Make Error return
 })
