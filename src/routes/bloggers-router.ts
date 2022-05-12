@@ -83,13 +83,24 @@ bloggersRouter.put(
   inputValidationMiddleware,
   urlValidation,
   urlValidationMiddleware,
+  bloggerValidationRules,
   async (req: Request, res: Response) => {
     const id = Number(req.params.bloggerId);
     const {name, youtubeUrl} = req.body;
-    const statusCode = await bloggersService.updateBloggerById(id, name, youtubeUrl);
-    res.send(statusCode);
-  },
-);
+    const blogger = await bloggersService.updateBloggerById(id, name, youtubeUrl);
+    if (!blogger) {
+      res.status(404)
+      res.send({
+        'errorsMessages': [{
+          message: 'blogger not found',
+          field: 'id'
+        }],
+        'resultCode': 0
+      })
+    } else {
+      res.status(204).send(204)
+    }
+  })
 
 // * Delete blogger by id
 

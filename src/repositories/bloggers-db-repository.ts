@@ -1,5 +1,5 @@
 import {BloggerType} from '../types';
-import {bloggersCollection} from './db';
+import {bloggersCollection, postsCollection} from './db';
 import {RequestQueryType} from '../helpers';
 
 export const bloggersRepository = {
@@ -35,16 +35,17 @@ export const bloggersRepository = {
     return newBlogger;
   },
 
-  async updateBloggerById(id: number, name: string, youtubeUrl: string): Promise<number> {
+  async updateBloggerById(id: number, name: string, youtubeUrl: string): Promise<boolean> {
     const result = await bloggersCollection.updateOne(
       {id: +id},
       {$set: {name, youtubeUrl}},
     );
-    if (!result) {
-      return 404;
-    } else {
-      return 204;
-    }
+    await postsCollection.updateMany( {bloggerId: id},
+      {$set: {
+          "bloggerName": name
+        }}
+    )
+    return result.modifiedCount === 1
   },
 
   async deleteBloggerById(id: number): Promise<boolean> {
