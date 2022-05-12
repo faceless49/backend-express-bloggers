@@ -1,5 +1,5 @@
 import {BloggerType, CommentsType, PostType, UserType} from './../types/index';
-import { MongoClient } from 'mongodb';
+import {MongoClient} from 'mongodb';
 import 'dotenv/config';
 
 

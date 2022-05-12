@@ -23,7 +23,7 @@ export const bloggersRepository = {
   },
 
   async findBloggerById(id: number) {
-    const blogger = bloggersCollection.findOne({id: id});
+    const blogger = bloggersCollection.findOne({id}, {projection: {_id: 0}})
     if (blogger) {
       return blogger;
     } else {
