@@ -68,7 +68,7 @@ bloggersRouter.get('/:bloggerId', bloggerValidationRules, async (req: Request, r
         message: 'blogger not found',
         field: 'id'
       }],
-      'resultCode': 1
+      'resultCode': 0
     }))
   }
 });
