@@ -1,14 +1,17 @@
 import {Request, Response, Router} from 'express';
 import {body} from 'express-validator';
 import {bloggersService} from '../domain/bloggers-service';
-import {inputValidationMiddleware} from '../middlewares/input-validation-middleware';
+import {
+  bloggerValidationRules,
+  inputValidationMiddleware,
+  urlValid
+} from '../middlewares/input-validation-middleware';
 import {urlValidationMiddleware} from '../middlewares/url-validation-middleware';
 import {postsService} from '../domain/posts-service';
 import {getPaginationData} from '../helpers';
 
 export const bloggersRouter = Router();
 
-const urlValid = new RegExp(/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/);
 
 // * Get all bloggers
 
@@ -54,7 +57,7 @@ bloggersRouter.post(
 
 // * Get one blogger by id
 
-bloggersRouter.get('/:bloggerId', async (req: Request, res: Response) => {
+bloggersRouter.get('/:bloggerId', bloggerValidationRules, async (req: Request, res: Response) => {
   const blogger = await bloggersService.findBloggerById(Number(req.params.bloggerId));
   if (blogger) {
     res.send(blogger);
