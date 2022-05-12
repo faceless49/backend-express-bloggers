@@ -38,29 +38,16 @@ const urlValidation = body('youtubeUrl')
 
 bloggersRouter.post(
   '/',
-  titleValidation,
-  inputValidationMiddleware,
-  urlValidation,
-  urlValidationMiddleware,
   bloggerValidationRules,
+  inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const {name, youtubeUrl} = req.body;
 
     const newBlogger = await bloggersService.createBlogger(name, youtubeUrl);
     if (newBlogger) {
       res.status(201).send(newBlogger);
-      return newBlogger;
-    } else {
-      res.status(400).send({
-        'errorsMessages': [
-          {
-            'message': 'string',
-            'field': 'string'
-          }
-        ],
-        'resultCode': 0
-      });
     }
+    return
   },
 );
 
