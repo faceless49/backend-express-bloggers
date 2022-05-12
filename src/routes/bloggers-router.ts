@@ -50,7 +50,15 @@ bloggersRouter.post(
       res.status(201).send(newBlogger);
       return newBlogger;
     } else {
-      res.send(400);
+      res.status(400).send({
+        'errorsMessages': [
+          {
+            'message': 'string',
+            'field': 'string'
+          }
+        ],
+        'resultCode': 0
+      });
     }
   },
 );

@@ -32,7 +32,7 @@ export const bloggersRepository = {
   },
 
   async createBlogger(newBlogger: BloggerType) {
-    await bloggersCollection.insertOne(newBlogger);
+    await bloggersCollection.insertOne(newBlogger, {forceServerObjectId: true});
     return newBlogger;
   },
 
