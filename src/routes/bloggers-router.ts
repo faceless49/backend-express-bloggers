@@ -70,14 +70,7 @@ bloggersRouter.get('/:bloggerId', bloggerValidationRules, async (req: Request, r
   if (blogger) {
     res.send(blogger);
   } else {
-    res.status(400);
-    res.send(res.send({
-      'errorsMessages': [{
-        message: 'blogger not found',
-        field: 'id'
-      }],
-      'resultCode': 0
-    }))
+    res.send(404)
   }
 });
 
