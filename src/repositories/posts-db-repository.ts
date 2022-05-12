@@ -51,8 +51,8 @@ export const postsRepository = {
     await postsCollection.insertOne({
       ...newPost,
       bloggerName: blogger?.name,
-    });
-    const postForReturn = await postsCollection.findOne({id: newPost.id});
+    }, {forceServerObjectId: true});
+    const postForReturn = await postsCollection.findOne({id: newPost.id}, {projection: {_id: 0}});
     return postForReturn;
   },
 

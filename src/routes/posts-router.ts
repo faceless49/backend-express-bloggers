@@ -35,13 +35,21 @@ postsRouter.post(
       title,
       shortDescription,
       content,
-      bloggerId,
+      Number(bloggerId),
     );
 
     if (newPost) {
       res.status(201).send(newPost);
     } else {
-      res.send(400);
+      res.status(400).send({
+        "errorsMessages": [
+          {
+            message: "blogger not found",
+            field: "bloggerId"
+          }
+        ],
+        "resultCode": 0
+      })
     }
   },
 );
@@ -52,7 +60,7 @@ postsRouter.get('/:postId', async (req: Request, res: Response) => {
   const id = Number(req.params.postId);
   const post = await postsService.findPostById(id);
   if (post) {
-    res.send(post);
+    res.status(200).send(post);
   } else {
     res.send(404);
   }
@@ -75,16 +83,30 @@ postsRouter.put(
       shortDescription,
       content,
     );
-    if (!updatedPost) {
-      res.send(404);
-    } else {
-      res.status(204).send(updatedPost);
-    }
+
     const updatedBlogger = await bloggersService.findBloggerById(bloggerId);
     if (!updatedBlogger) {
-      res.status(400);
+      res.status(400).send({
+        "errorsMessages": [{
+          message: "blogger not found",
+          field: "bloggerId"
+        }],
+        "resultCode": 1
+      })
+      return
     }
-    return;
+    if (!updatedPost) {
+      res.status(404)
+      res.send({
+        "errorsMessages": [{
+          message: "post not found",
+          field: "id"
+        }],
+        "resultCode": 0
+      })
+    } else {
+      res.status(204).send(updatedPost)
+    }
   },
 );
 

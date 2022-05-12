@@ -42,6 +42,7 @@ bloggersRouter.post(
   inputValidationMiddleware,
   urlValidation,
   urlValidationMiddleware,
+  bloggerValidationRules,
   async (req: Request, res: Response) => {
     const {name, youtubeUrl} = req.body;
 
