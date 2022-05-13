@@ -119,6 +119,6 @@ bloggersRouter.delete('/', async (req: Request, res: Response) => {
   if (isDeleted) {
     res.send(204)
   } else {
-    res.send(400)
+    res.send(204)
   }
 })
