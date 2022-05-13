@@ -23,7 +23,6 @@ export async function runDb() {
   } catch(e) {
     console.log(e, 'error')
     console.log('Can"t connect to server',e);
-
     // Ensures that the client will close when you finish/error
     await client.close();
   }
