@@ -1,7 +1,6 @@
-import { Request, Response, Router } from 'express';
-import { body } from 'express-validator';
-import { bloggersService } from '../domain/bloggers-service';
-import { postsService } from '../domain/posts-service';
+import {Request, Response, Router} from 'express';
+import {bloggersService} from '../domain/bloggers-service';
+import {postsService} from '../domain/posts-service';
 import {
   inputValidationMiddleware,
   postValidationRules
@@ -25,30 +24,29 @@ postsRouter.post(
   postValidationRules,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const { title, shortDescription, content, bloggerId } = req.body;
-
-    const newPost = await postsService.createPost(
-      title,
-      shortDescription,
-      content,
-      Number(bloggerId),
-    );
-
-    if (newPost) {
-      res.status(201).send(newPost);
-    } else {
+    const {title, shortDescription, content, bloggerId} = req.body;
+    const blogger = await bloggersService.findBloggerById(bloggerId)
+    if (!blogger) {
       res.status(400).send({
-        "errorsMessages": [
+        'errorsMessages': [
           {
-            message: "blogger not found",
-            field: "bloggerId"
+            message: 'blogger not found',
+            field: 'bloggerId'
           }
         ],
-        "resultCode": 0
+        'resultCode': 1
       })
+    } else {
+      const newPost = await postsService.createPost(
+        title,
+        shortDescription,
+        content,
+        Number(bloggerId),
+      );
+      res.status(201).send(newPost)
     }
-  },
-);
+  })
+
 
 // * Get one post by id
 
@@ -70,7 +68,7 @@ postsRouter.put(
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const id = Number(req.params.postId);
-    const { title, shortDescription, content, bloggerId } = req.body;
+    const {title, shortDescription, content, bloggerId} = req.body;
     const updatedPost = await postsService.updatePostById(
       id,
       title,
@@ -81,22 +79,22 @@ postsRouter.put(
     const updatedBlogger = await bloggersService.findBloggerById(bloggerId);
     if (!updatedBlogger) {
       res.status(400).send({
-        "errorsMessages": [{
-          message: "blogger not found",
-          field: "bloggerId"
+        'errorsMessages': [{
+          message: 'blogger not found',
+          field: 'bloggerId'
         }],
-        "resultCode": 1
+        'resultCode': 1
       })
       return
     }
     if (!updatedPost) {
       res.status(404)
       res.send({
-        "errorsMessages": [{
-          message: "post not found",
-          field: "id"
+        'errorsMessages': [{
+          message: 'post not found',
+          field: 'id'
         }],
-        "resultCode": 0
+        'resultCode': 0
       })
     } else {
       res.status(204).send(updatedPost)

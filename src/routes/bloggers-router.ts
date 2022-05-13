@@ -112,3 +112,14 @@ bloggersRouter.post('/:bloggerId/posts', async (req: Request, res: Response) => 
     res.send(200)
   }
 })
+
+// * Delete all bloggers
+
+bloggersRouter.delete('/', async (req: Request, res: Response) => {
+  const result = await bloggersService.deleteBloggers()
+  if (result) {
+    res.send(204)
+  } else {
+    res.send(400)
+  }
+})

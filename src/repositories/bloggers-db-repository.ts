@@ -54,4 +54,8 @@ export const bloggersRepository = {
     const result = await bloggersCollection.deleteOne({id: +id});
     return result.deletedCount === 1
   },
+  async deleteBloggers(): Promise<boolean> {
+    const result = await bloggersCollection.deleteMany({});
+    return result.deletedCount === 1
+  },
 };
