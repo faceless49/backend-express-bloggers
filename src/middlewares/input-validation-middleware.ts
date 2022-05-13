@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from 'express';
 import {validationResult, body} from 'express-validator';
 
-const urlValid = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
+const urlValid = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
 
 
 

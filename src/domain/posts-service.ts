@@ -39,4 +39,7 @@ export const postsService = {
   async deletePostById(id: number) {
     return await postsRepository.deletePostById(id);
   },
+  async deletePosts() {
+    return await postsRepository.deletePosts();
+  },
 };
