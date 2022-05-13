@@ -21,7 +21,6 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
 });
 
 
-
 // * Add new blogger
 
 bloggersRouter.post(
@@ -116,7 +115,6 @@ bloggersRouter.post('/:bloggerId/posts', async (req: Request, res: Response) => 
 // * Delete all bloggers
 
 bloggersRouter.delete('/', async (req: Request, res: Response) => {
-  debugger;
   const isDeleted = await bloggersService.deleteBloggers()
   if (isDeleted) {
     res.send(204)

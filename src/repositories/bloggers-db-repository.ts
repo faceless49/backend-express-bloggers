@@ -55,7 +55,6 @@ export const bloggersRepository = {
     return result.deletedCount === 1
   },
   async deleteBloggers(): Promise<boolean> {
-    debugger
     const result = await bloggersCollection.deleteMany({});
     return result.deletedCount !== 0
   },
