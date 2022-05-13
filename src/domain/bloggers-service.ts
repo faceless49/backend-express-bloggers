@@ -21,11 +21,8 @@ export const bloggersService = {
     return await bloggersRepository.updateBloggerById(id, name, youtubeUrl);
   },
 
-  async deleteBloggerById(id: number): Promise<boolean> {
+  async deleteBloggerById(id: number) {
     return await bloggersRepository.deleteBloggerById(id);
-  },
-  async deleteBloggers(): Promise<boolean> {
-    return await bloggersRepository.deleteBloggers();
   },
   async findPostsByBloggerId(id: number) {
     return await bloggersRepository.findBloggerById(id);

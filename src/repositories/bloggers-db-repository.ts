@@ -50,12 +50,8 @@ export const bloggersRepository = {
     return result.modifiedCount === 1
   },
 
-  async deleteBloggerById(id: number): Promise<boolean> {
-    const result = await bloggersCollection.deleteOne({id: +id});
+  async deleteBloggerById(id: number) {
+    const result = await bloggersCollection.deleteOne({id});
     return result.deletedCount === 1
-  },
-  async deleteBloggers(): Promise<boolean> {
-    const result = await bloggersCollection.deleteMany({});
-    return result.deletedCount !== 0
   },
 };

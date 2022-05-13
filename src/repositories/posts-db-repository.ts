@@ -73,8 +73,4 @@ export const postsRepository = {
     const result = await postsCollection.deleteOne({id});
     return result.deletedCount === 1;
   },
-  async deletePosts() {
-    const result = await postsCollection.deleteMany({});
-    return result.deletedCount !== 0;
-  },
 };

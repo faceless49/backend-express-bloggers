@@ -105,16 +105,8 @@ postsRouter.put(
 // * Delete post by id
 
 postsRouter.delete('/:postId', async (req: Request, res: Response) => {
-  const isDeleted = await postsService.deletePostById(+req.params.postId);
-  if (isDeleted) {
-    res.send(204);
-  } else {
-    res.send(404);
-  }
-});
-
-postsRouter.delete('/', async (req: Request, res: Response) => {
-  const isDeleted = await postsService.deletePosts();
+  const id = Number(req.params.postId);
+  const isDeleted = await postsService.deletePostById(id);
   if (isDeleted) {
     res.send(204);
   } else {
