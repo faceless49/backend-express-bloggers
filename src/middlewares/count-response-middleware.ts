@@ -13,7 +13,6 @@ export const countResponseMiddleware = (req: Request, res: Response, next: NextF
     } else {
         pageVisits[req.originalUrl] = 1
     }
-    console.log(pageVisits[req.originalUrl])
     res.header('Count', pageVisits[req.originalUrl].toString())
     next()
 }
