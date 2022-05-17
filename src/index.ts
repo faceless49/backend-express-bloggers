@@ -9,15 +9,19 @@ import {commentsRouter} from './routes/comments-router';
 
 import 'dotenv/config';
 import {blacklistMiddleware} from "./middlewares/blacklist-middleware";
+import {countResponseMiddleware} from "./middlewares/count-response-middleware";
 
 const app = express();
 const port = process.env.PORT || 4000;
+/**
+ *  * Custom Middleware
+ */
 app.use(blacklistMiddleware)
+app.use(countResponseMiddleware)
 
 app.use(cors());
 const jsonBodyMiddleware = bodyParser.json();
 app.use(jsonBodyMiddleware);
-
 
 app.use('/bloggers', bloggersRouter);
 app.use('/posts', postsRouter);
