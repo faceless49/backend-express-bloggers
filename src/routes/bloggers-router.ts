@@ -7,6 +7,7 @@ import {
 import {postsService} from '../domain/posts-service';
 import {getPaginationData} from '../helpers';
 import {contentCheckerMiddleware} from "../middlewares/content-checker-middleware";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const bloggersRouter = Router();
 
@@ -26,6 +27,7 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
 
 bloggersRouter.post(
     '/',
+    authMiddleware,
     bloggerValidationRules,
     inputValidationMiddleware,
     contentCheckerMiddleware('application/json'),
@@ -55,6 +57,7 @@ bloggersRouter.get('/:bloggerId', bloggerValidationRules, async (req: Request, r
 
 bloggersRouter.put(
     '/:bloggerId',
+    authMiddleware,
     bloggerValidationRules,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -77,7 +80,7 @@ bloggersRouter.put(
 
 // * Delete blogger by id
 
-bloggersRouter.delete('/:bloggerId', async (req: Request, res: Response) => {
+bloggersRouter.delete('/:bloggerId', authMiddleware, async (req: Request, res: Response) => {
     const id = Number(req.params.bloggerId);
     const isDeleted = await bloggersService.deleteBloggerById(id);
     if (isDeleted) {
