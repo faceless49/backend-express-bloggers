@@ -1,21 +1,22 @@
 type RequestUrlQueryType = {
-  page?: string | number
-  pageSize?: string | number
-  searchNameTerm?: string | null
+    Page?: string | number
+    PageSize?: string | number
+    SearchNameTerm?: string | null
 }
 
 export type RequestQueryType = {
-  page: number
-  pageSize: number
-  searchNameTerm: string | null
+    page: number
+    pageSize: number
+    searchNameTerm: string | null
 }
 
 export const getPaginationData = ({
-  page = 1,
-  pageSize = 10,
-  searchNameTerm = null
-}: RequestUrlQueryType):RequestQueryType => {
-  page = +page
-  pageSize = +pageSize
-  return {page, pageSize, searchNameTerm}
+                                      Page = 1,
+                                      PageSize = 10,
+                                      SearchNameTerm = null
+                                  }: RequestUrlQueryType): RequestQueryType => {
+    const page = +Page
+    const pageSize = +PageSize
+    const searchNameTerm = SearchNameTerm
+    return {page, pageSize, searchNameTerm}
 }

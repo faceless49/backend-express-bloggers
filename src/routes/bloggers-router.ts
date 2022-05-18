@@ -17,7 +17,6 @@ export const bloggersRouter = Router();
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     const reqParams = getPaginationData(req.query)
     const result = await bloggersService.findAllBloggers(reqParams)
-    console.log(result)
     res.status(200).send(
         result
     )
