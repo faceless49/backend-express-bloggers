@@ -9,9 +9,11 @@ export const bloggersRepository = {
     searchNameTerm
   }: RequestQueryType) { // TODO: ToLowerCase
     const filter = {name: {$regex: searchNameTerm ? searchNameTerm : ''}}
+    debugger
     const bloggers = await bloggersCollection.find(filter).project({_id: false}).skip((page - 1) * pageSize).limit(pageSize).toArray();
     const totalCount = (await bloggersCollection.find(filter).toArray()).length
     const pagesCount = Math.ceil(totalCount / pageSize)
+    debugger
     return ({
       pagesCount,
       page,

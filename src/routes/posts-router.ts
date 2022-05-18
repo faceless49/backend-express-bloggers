@@ -15,7 +15,12 @@ export const postsRouter = Router();
 postsRouter.get('/', async (req: Request, res: Response) => {
     const reqParams = getPaginationData(req.query)
     const posts = await postsService.findPosts(reqParams, null);
-    res.send(posts.items);
+    if (posts) {
+        res.send(posts);
+        return
+    } else {
+        res.send(404)
+    }
 });
 
 // * Add new post

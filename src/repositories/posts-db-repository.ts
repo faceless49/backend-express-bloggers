@@ -9,19 +9,18 @@ export const postsRepository = {
       pageSize,
     } = reqParams
 
-    const filter = bloggerId ? bloggerId : {}
+    const filter = bloggerId ? {id: bloggerId} : {}
     const totalCount = (await postsCollection.find(filter).toArray()).length
 
     const pagesCount = Math.ceil(totalCount / pageSize)
     const posts = await postsCollection.find(filter, {projection: {_id: 0}}).skip((page - 1) * pageSize)
       .limit(pageSize)
       .toArray()
-
     return ({
-      // pagesCount,
-      // page,
-      // pageSize,
-      // totalCount,
+      pagesCount,
+      page,
+      pageSize,
+      totalCount,
       items: posts
     })
   },
