@@ -106,9 +106,14 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
 });
 
 // * Create new post for specific blogger
-bloggersRouter.post('/:bloggerId/posts', async (req: Request, res: Response) => {
+bloggersRouter.post('/:bloggerId/posts', authMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
     const bloggerId = Number(req.params.bloggerId)
+    const blogger = await bloggersService.findBloggerById(bloggerId)
     const {title, shortDescription, content} = req.body
+    if (!blogger) {
+        res.sendStatus(404)
+        return
+    }
     const post = await postsService.createPost(title, shortDescription, content, bloggerId)
     if (post) {
         res.status(201).send(post)
