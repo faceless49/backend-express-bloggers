@@ -9,7 +9,7 @@ export const postsRepository = {
 			pageSize,
 		} = reqParams
 
-		const filter = bloggerId ? {id: bloggerId} : {}
+		const filter = bloggerId ? {bloggerId} : {}
 		const totalCount = (await postsCollection.find(filter).toArray()).length
 
 		const pagesCount = Math.ceil(totalCount / pageSize)
@@ -18,6 +18,7 @@ export const postsRepository = {
 			.skip((page - 1) * pageSize)
 			.limit(pageSize)
 			.toArray()
+		debugger
 		return ({
 			pagesCount,
 			page,
