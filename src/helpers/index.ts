@@ -12,7 +12,7 @@ export type RequestQueryType = {
 
 export const getPaginationData = ({
   page = 1,
-  pageSize = 100,
+  pageSize = 10,
   searchNameTerm = null
 }: RequestUrlQueryType):RequestQueryType => {
   page = +page
