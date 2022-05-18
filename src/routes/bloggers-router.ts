@@ -17,8 +17,9 @@ export const bloggersRouter = Router();
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     const reqParams = getPaginationData(req.query)
     const result = await bloggersService.findAllBloggers(reqParams)
+    console.log(result)
     res.status(200).send(
-        result.items
+        result
     )
 });
 
@@ -95,11 +96,12 @@ bloggersRouter.delete('/:bloggerId', authMiddleware, async (req: Request, res: R
 
 bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
     const bloggerId = Number(req.params.bloggerId)
+    if (!bloggerId) return res.send(404);
     const reqParams = getPaginationData(req.query)
     const blogger = await bloggersService.findBloggerById(Number(req.params.bloggerId));
     if (blogger) {
         const posts = await postsService.findPosts(reqParams, bloggerId)
-        res.status(200).send(posts)
+        res.sendStatus(200).send(posts)
     } else {
         res.send(404)
     }
@@ -108,12 +110,13 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
 // * Create new post for specific blogger
 bloggersRouter.post('/:bloggerId/posts', authMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
     const bloggerId = Number(req.params.bloggerId)
+    if (!bloggerId) return res.send(404);
     const blogger = await bloggersService.findBloggerById(bloggerId)
-    const {title, shortDescription, content} = req.body
     if (!blogger) {
         res.sendStatus(404)
         return
     }
+    const {title, shortDescription, content} = req.body
     const post = await postsService.createPost(title, shortDescription, content, bloggerId)
     if (post) {
         res.status(201).send(post)
