@@ -1,5 +1,5 @@
 type RequestUrlQueryType = {
-    Page?: string | number
+    PageNumber?: string | number
     PageSize?: string | number
     SearchNameTerm?: string | null
 }
@@ -11,11 +11,11 @@ export type RequestQueryType = {
 }
 
 export const getPaginationData = ({
-                                      Page = 1,
+                                      PageNumber = 1,
                                       PageSize = 10,
                                       SearchNameTerm = null
                                   }: RequestUrlQueryType): RequestQueryType => {
-    const page = +Page
+    const page = +PageNumber
     const pageSize = +PageSize
     const searchNameTerm = SearchNameTerm
     return {page, pageSize, searchNameTerm}
